@@ -10,6 +10,7 @@ import email.header
 import datetime
 import os
 from twilio.rest import TwilioRestClient
+from bs4 import BeautifulSoup
 
 #twilio stuff
 ACCOUNT_SID = "ACf705535b7e3903d62feb8e7a4363959a"
@@ -42,12 +43,17 @@ def processMailbox(M):
         decode = email.header.decode_header(msg['Subject'])[0]
         subject = unicode(decode[0])
         mailSubject = 'Message subject: %s' % (subject)
-        fullMessage = msg.get_payload(True)
+        plain = msg.get_payload(True)
+        print plain
+        #running the HTML through BeautifulSoup
+        soup = BeautifulSoup(plain.as_string())
+        fullMessage = soup.get_text()
+
         print mailSubject
         print fullMessage
         
         #sending the text
-        send_sms("14154307313", mailSubject)
+        send_sms("14154307313", mailSubject+fullMessage)
         print "Message sent!"
         print 'Raw Date:', msg['Date']
         #convert to local date-time
