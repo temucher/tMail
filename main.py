@@ -46,8 +46,12 @@ def processMailbox(M):
         plain = msg.get_payload(True)
         print plain
         #running the HTML through BeautifulSoup
-        soup = BeautifulSoup(plain.as_string())
-        fullMessage = soup.get_text()
+        plain = plain.as_string()
+        #plain.br.replace_with("\n")
+        soup = BeautifulSoup(plain)
+        new = soup.get_text()
+
+        fullMessage = new
 
         print mailSubject
         print fullMessage
